@@ -1,0 +1,458 @@
+
+// SQL Datatypes 
+
+- They define the type of values that can be stored in a column.
+
+CHAR - can store characters of fixed length - CHAR(50)
+VARCHAR - can store characters up to given length - VARCHAR(50)
+
+BLOB - can store binary large object - BLOB(1000)
+
+INT - integer
+TINYINT - (-128 to 127)
+BIGINT 
+
+BIT - can store x-bit values. x can range from 1 to 64. => BIT(2)
+
+FLOAT - decimal number - with precision to 23 digits
+
+DOUBLE - decimal number - with 24 to 53 digits 
+
+BOOLEAN - Boolean values 0 or 1
+
+DATE - data in format of YYYY-MM-DD 
+
+YEAR - year in  4 digits  YEAR 
+
+// Signed & Unsigned 
+
+TINYINT UNSINGED  (0 to 255)
+SINGED (-128 to 127)
+
+
+// Types of SQL Commands : 
+
+DDL (Data Definition Language ) : create, alter, rename, truncate & drop.
+
+DQL (Data Query Language ) : select 
+
+DML (Data Manipulation Language ) : insert, update & delete 
+
+DCL (Data Control Language) : grant & revoke permission to users 
+
+TCL ( Transaction Control Language ) : start transaction, commit, rollback etc.
+
+// Databse related Queries 
+
+- CREATE DATABASE db_name;
+
+- CREATE DATABASE IF NOT EXISTS db_name;
+
+- DROP DATABASE db_name;
+
+- DROP DATABASE IF EXISTS db_name;
+
+- SHOW DATABASE;
+
+- SHOW TABLES;
+
+
+// Table related Queries 
+
+// CREATE 
+
+- CREATE TABLE table_name ( 
+    column_name1 datatype contraint,
+    column_name2 datatype contraint, 
+);
+
+- CREATE TABLE student(
+    rollno INT PRIMARY KEY ,
+    name VARCHAR(50)
+);
+
+- PRIMARY KEY = NOT NULL + UNIQUE
+
+// SELECT & VIEW ALL COLUMNS
+
+- SELECT * FROM table_name;
+
+- SELECT * FROM student;
+
+// INSERT 
+
+- INSERT INTO table_name (column_name1,column_name2) VALUES (col1_v1,col2_v2);
+
+- INSERT INTO student (rollno, name) VALUES (101,"karan"),(102,"arjun");
+
+// col is same order so no need to write 
+- INSERT INTO student VALUES (104, "shyam");
+
+// Practice Qs 1
+
+// Keys 
+
+- PRIMARY KEY 
+
+- It is a column (or set of columns) in a table that uniquely identifies each row. (a unique id).
+- There is only 1 PK & should be NOT null.
+
+- FOREIGN KEY 
+
+- A foreign key is a column (or set of columns) in a table that refers to the primary key 
+- There can be multiple FKs.
+-FKs can have duplicate & null values.
+
+// Constraints 
+- SQL Constraints are used to specify rules for data in a table.
+
+NOT NULL => columns cannot have a null value 
+- col1 int NOT NULL 
+
+UNIQUE => all values in column are different 
+- col2 INT UNIQUE
+
+PRIMARY KEY => makes a column unique & not null but used only for one.
+- id INT PRIMARY KEY
+- PRIMARY KEY (id)
+- PRIMARY KEY (id , name) -> id may be duplicate , name may be duplicate but id and name both should not be duplicate.
+
+// FOREIGN KEY 
+- prevent actions that would destory links between tables.
+
+- CREATE TABLE temp (
+    cust_id int,
+    FOREIGN KEY (cust_id) refernces customer(id)
+);
+
+// DEFAULT 
+- sets the default value of a column
+
+- salary INT DEFAULT 25000
+
+// CHECK 
+- it can limit the values allowed in a column.
+
+- CREATE TABLE city (
+    id INT PRIMARY KEY ,
+    city VARCHAR(50),
+    age INT ,
+    CONSTRAINTS age_check CHECK 
+    (age >= 18 AND city="Delhi")
+);
+
+- CREATE TABLE newTab (
+    age INT CHECK (age >= 18)
+);
+
+
+// SELECT IN DETAIL
+- used to select any data from the database 
+
+// Basic Syntax 
+- SELECT col1, col2 FROM table_name;
+
+// To Select ALL 
+- SELECT * FROM table_name;
+
+// DISTINCT -> UNIQUE
+
+SELECT DISTINCT city FROM student;
+
+// WHERE Clause
+- To define some conditions 
+
+- SELECT col1,col2 FROM table_name WHERE consitions;
+
+- SELECT * FROM student WHERE marks > 80;
+
+- SELECT * FROM student WHERE city = "Mumbai";
+
+// WHERE Clause
+- Using Operators in WHERE
+
+Arithmetic Operators : + (addition) , - (subtraction), * (multiplication) , / (division) , % (modulus)
+
+Comparison Operators : = (equal to) , != (not equal to), > , >= , < , <=
+  
+Logical Operators : AND , OR , NOT ,IN ,BETWEEN , ALL , LIKE , ANY
+
+Bitwise Operators : & (Bitwise AND ), | (Bitwise OR)
+
+// Operators 
+
+- AND(to check for both conditions to be true)
+
+SELECT * FROM student WHERE marks > 80 AND city="Mumbai";
+
+- OR(to check for one of the conditions to be true)
+SELECT * FROM student WHERE marks > 90 OR city="Mumbai";
+
+// Between (selects for a given range)
+- SELECT * FROM student WHERE marks BETWEEN 80 AND 90;
+- here 80 and 90 both are inclusive
+
+// IN (matches any value in the list)
+- SELECT * FROM student WHERE city IN ("Delhi","Mumbai");
+
+// NOT (to negate the given condition)
+- SELECT * FROM student WHERE city NOT IN ("Delhi","Mumbai");
+
+// Limit Clause 
+- Sets an upper limit on number of(tuples) row to be returend
+
+- SELECT * FROM student LIMIT 3;
+
+- SELECT col1,col2 FROM table_name LIMIT number;
+
+// ORDER BY Clause
+- To sort in ascending(ASC) or descending(DESC) order
+
+- SELECT col1,col2 FROM table_name ORDER BY col_name ASC;
+
+- SELECT * FROM student ORDER BY city ASC;
+
+// Aggregate Functions 
+- Aggregate functions perform a calculation on a set of values, and return a single value.
+
+- COUNT()
+- MAX()
+- MIN()
+- SUM()
+- AVG()
+
+- Get Maximum Marks 
+- SELECT max(marks) FROM student;
+
+- Get Average Marks 
+- SELECT avg(marks) FROM student;
+
+// Group By Clause
+- Groups rows that have the same values into summary rows.
+- It collects data from multiple records and groups the result by one or more column.
+
+*Generally we use group by with some aggregation function.
+
+- Count number of students in each city
+- SELECT city , count(name) FROM student GROUP BY city;
+
+// Practice Qs 
+
+// Having Clause 
+- Similer to Where i.e. applies some condition on rows.
+- Used when we want to apply any condition after grouping.
+
+- Count number of students in each city where max marks cross 90.
+- SELECT count(name) , city FROM student GROUP BY city HAVING max(marks) > 90;
+
+// General Order 
+- SELECT column(s) 
+FROM table_name
+WHERE condition 
+GROUP BY column(s)
+HAVING condition
+ORDER BY column(s) ASC;
+
+// TABLE related Queries 
+- Update (to update existing rows)
+
+UPDATE table_name SET col1 = val1 , col2 = val2 WHERE condition;
+
+- UPDATE student SET grade = "O" WHERE grade = "A";
+
+// DELETE (to delete existing rows)
+
+DELETE FROM table_name WHERE condition;
+
+- DELETE FROM student WHERE marks < 33;
+
+- all table data delete 
+- DELETE FROM table_name;
+-DELETE FROM student;
+
+// Revisiting FK 
+
+// Cascading for FK 
+- On Delete Cascade 
+- When we create a foreign key using this option, it deletes the referencing rows in the child table when the referenced row is deleted in the parent table which has a primary key. 
+
+- On Update Cascade 
+- When we create a foreign key using UPDATE CASCADE the referencing rows are updated in the child table when the referenced row is updated in the parent table which has a primary key.
+
+- CREATE TABLE student ( 
+id INT PRIMARY KEY,
+courseID INT,
+FOREIGN KEY(courseID) REFERENCES course(id)
+ON DELETE CASCADE
+ON UPDATE CASCADE
+)
+
+// Table related Queries 
+// ALTER (to change the schema)
+
+ADD Column 
+- ALTER TABLE table_name;
+- ADD COLUMN column_name datatype Constraint;
+
+DROP Column 
+- ALTER TABLE table_name
+- DROP COLUMN column_name;
+
+RENAME Table 
+- ALTER TABLE table_name
+RENAME TO new_table_name;
+
+CHANGE COLUMN (rename)
+- ALTER TABLE table_name
+CHANGE COLUMN old_column_name new_column_name datatype Constraint;
+
+MODIFY COLUMN (modify datatype/constraint)
+- ALTER TABLE table_name
+MODIFY COLUMN column_name datatype Constraint;
+
+// ADD COLUMN
+- ALTER TABLE student
+ADD COLUMN age INT NOT NULL DEFAULT 19;
+
+// MODIFY COLUMN
+- ALTER TABLE student
+MODIFY age VARCHAR(2);
+
+// CHANGE COLUMN
+- ALTER TABLE student
+CHANGE age student_age INT;
+
+// DROP COLUMN
+- ALTER TABLE student
+DROP COLUMN student_age;
+
+// RENAME TABLE
+- ALTER TABLE student
+RENAME TO stu;
+
+// TRUNCATE (to delete table's data)
+- TRUNCATE TABLE table_name;
+
+// PRACTICE Qs
+
+// JOINS IN SQL
+- Join is used to combine rows from two or more tables, based on a related column between them.
+
+// Types of Joins
+- INNER JOIN
+
+// OUTER JOINS
+- LEFT JOIN
+- RIGHT JOIN
+- FULL JOIN
+
+// INNER JOIN
+- Returns records that have matching values in both tables.
+
+- Syntax
+- SELECT column(s) FROM tableA INNER JOIN tableB ON tableA.column = tableB.column;
+
+- SELECT * FROM student INNER JOIN course ON student.student_id = course.student_id;
+
+// ALIAS
+- To give a name to a table or a column.
+
+- SELECT * FROM student AS stu;
+
+// LEFT JOIN
+- Returns all records from the left table and the matched records from the right table.
+
+- Syntax
+- SELECT column(s) FROM tableA LEFT JOIN tableB ON tableA.column = tableB.column;
+
+- SELECT * FROM student LEFT JOIN course ON student.student_id = course.student_id;
+
+// RIGHT JOIN
+- Returns all records from the right table and the matched records from the left table.
+
+- Syntax
+- SELECT column(s) FROM tableA RIGHT JOIN tableB ON tableA.column = tableB.column;
+
+// FULL JOIN
+- Returns all records when there is match in both the tables.
+
+- Syntax
+- SELECT column(s) FROM tableA FULL JOIN tableB ON tableA.column = tableB.column;
+UNION
+SELECT * FROM student FULL JOIN course ON student.student_id = course.student_id;
+
+// LEFT JOIN UNION RIGHT JOIN
+
+- SELECT * FROM student LEFT JOIN course ON student.student_id = course.student_id
+UNION
+SELECT * FROM student RIGHT JOIN course ON student.student_id = course.student_id;
+
+// Think & Ans 
+
+// SELF JOIN
+- It is a regular join but the table is joined with itself.
+
+// Syntax 
+- SELECT column(s) FROM table as a JOIN table as b ON a.col_name = b.col_name;
+
+// UNION
+- It is used to combine the result-set of two or more SELECT statements.
+GIVES UNIQUE records.
+
+// UNION ALL - Gives all values including duplicates.
+
+To use it:
+- every SELECT should have same no. of columns
+- columns must have similar data types 
+- columns in every SELECT should be in same order 
+
+Syntax : 
+SELECT column(s) FROM tableA 
+UNION 
+SELECT column(s) FROM tableB
+
+// SQL Sub Queries 
+- A Subquery or Inner query or a Nested query is a query within another SQL query.
+
+It involves 2 select statements.
+
+// Syntax :
+- SELECT column(s)
+FROM table_name
+WHERE col_name operator 
+(subquery);
+
+// WHERE Example :
+
+- SELECT name ,marks FROM student WHERE marks > (SELECT AVG(marks) FROM student);
+
+- SELECT name,rollno FROM student WHERE rollno IN (SELECT rollno  FROM student WHERE rollno % 2=0);
+
+// FROM Example :
+
+- SELECT * FROM student WHERE city="Delhi";
+
+- SELECT MAX(marks) FROM (SELECT * FROM student WHERE city="Delhi") AS temp;
+
+// SELECT Example :
+
+- SELECT (SELECT MAX(marks) FROM student), name FROM student;
+
+// MySQL Views 
+- A view is a virtual table based on the result-set of an SQL statement.
+
+- Syntax :
+CREATE VIEW view1 AS
+SELECT column(s) FROM table_name;
+
+SELECT * FROM view1;
+
+* A view always shows up-to-date data. The database engine recreates the view, every time a user queries it. 
+
+- CREATE VIEW view1 AS 
+SELECT rollno , name,marks FROM student;
+
+- SELECT * FROM view1;
+
+-------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------- 
